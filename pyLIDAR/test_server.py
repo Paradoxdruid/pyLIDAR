@@ -1,3 +1,5 @@
+"""A minimal test server to simulate LD06 data stream."""
+
 # Derived from
 # https://stackoverflow.com/questions/57925492/how-to-listen-continuously-to-a-socket-for-data-in-python
 
@@ -5,8 +7,6 @@ import socket
 import threading
 import time
 from typing import Tuple
-
-# --- constants ---
 
 SAMPLE = bytes.fromhex(
     (
@@ -29,27 +29,20 @@ SAMPLE = bytes.fromhex(
 )
 
 HOST: str = socket.gethostname()  # local address IP (not external address IP)
-
 # '0.0.0.0' or '' - conection on all NICs (Network Interface Card),
 # '127.0.0.1' or 'localhost' - local conection only (can't connect from remote computer)
 # 'Local_IP' - connection only on one NIC which has this IP
 
 PORT: int = 8000  # local port (not external port)
 
-# --- functions ---
-
 
 def handle_client(conn, addr):
     print("Entered")
     # _ = conn.recv(1024)
     # print("Entered and received")
-    # data = str((randint(0, 10), randint(0, 10)))
-    # request_string = data.decode("utf-8")
     try:
         # print("Trying")
         while True:
-            # data: str = str((randint(0, 10), randint(0, 10), randint(0, 10)))
-            # conn.send(data.encode())
             conn.send(SAMPLE)
             # print("Sent")
             time.sleep(1)
@@ -65,10 +58,6 @@ def handle_client(conn, addr):
     finally:
         conn.close()
 
-
-# --- main ---
-
-# all_threads = []
 
 try:
     # --- create socket ---
@@ -129,7 +118,3 @@ finally:
     print("[DEBUG] close socket")
 
     s.close()
-
-    # for t in all_threads:
-    #    t.running = False # it would need to build own class Thread
-    #    t.join()

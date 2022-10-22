@@ -44,9 +44,9 @@ class Reading:
     points: List[Point]
 
 
-def chunk(input: bytes) -> int:
+def chunk(byte_input: bytes) -> int:
     """Convert given byte(s) to int representation"""
-    return int.from_bytes(input, "big")
+    return int.from_bytes(byte_input, "big")
 
 
 def read_data(raw_bytes: bytes) -> List[Reading]:
@@ -55,19 +55,19 @@ def read_data(raw_bytes: bytes) -> List[Reading]:
     bytes_split = raw_bytes.split(b"T")
 
     readings_list: List[Reading] = []
-    for input in bytes_split:
+    for each_bytes in bytes_split:
         # print(each.hex())
-        if len(input) != 46:  # Ignore incomplete reads
+        if len(each_bytes) != 46:  # Ignore incomplete reads
             continue
 
         # Analyze each complete reading
-        input = b"T" + input  # Put back the start character that was stripped
+        each_bytes = b"T" + each_bytes  # Put back the start character that was stripped
 
-        radar_speed = chunk(input[3:4] + input[2:3])
-        start_angle = chunk(input[5:6] + input[4:5])
-        data = input[6:42]
-        end_angle = chunk(input[43:44] + input[42:43])
-        timestamp = chunk(input[45:46] + input[44:45])
+        radar_speed = chunk(each_bytes[3:4] + each_bytes[2:3])
+        start_angle = chunk(each_bytes[5:6] + each_bytes[4:5])
+        data = each_bytes[6:42]
+        end_angle = chunk(each_bytes[43:44] + each_bytes[42:43])
+        timestamp = chunk(each_bytes[45:46] + each_bytes[44:45])
         # crc_check = chunk(input[46:47])
 
         data_list = [data[i : i + 3] for i in range(0, len(data), 3)]
