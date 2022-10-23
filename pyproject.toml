@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyLIDAR"
+version = "0.1.0"
+authors = [
+    {name = "Paradoxdruid", email = "bonham@gmail.com"},
+]
+description = "python scripts to interact with the LD06 LIDAR"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "pyserial",
+    "matplotlib",
+]

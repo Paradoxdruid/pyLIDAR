@@ -1,4 +1,4 @@
-# Interpret LD06 LIDAR data packets
+"""Interpret LD06 LIDAR data packets"""
 
 from dataclasses import dataclass
 from typing import List
