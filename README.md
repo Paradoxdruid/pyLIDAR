@@ -2,7 +2,9 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/paradoxdruid/pyLIDAR/badge)](https://www.codefactor.io/repository/github/paradoxdruid/pyLIDAR)  [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c8c86fe25a644cb69b8b6e789ca1c18f)](https://www.codacy.com/gh/Paradoxdruid/pyLIDAR/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Paradoxdruid/pyLIDAR&amp;utm_campaign=Badge_Grade) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)  ![GitHub](https://img.shields.io/github/license/Paradoxdruid/pyLIDAR)
 
-python scripts to interact with the LD06 LIDAR
+LDRobot makes a [LD06 LiDAR](https://www.ldrobot.com/product/en/98) sensor that has been widely adapted for applications such as Raspberry Pi.
+
+This repository has some scripts to interact with the serial data from the LD06, making readings from the instrument available as well-structured dataclasses in Python, or automatically graphing input in real-time.
 
 ## Test pyLIDAR
 
