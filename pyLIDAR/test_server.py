@@ -3,7 +3,9 @@
 # Derived from
 # https://stackoverflow.com/questions/57925492/how-to-listen-continuously-to-a-socket-for-data-in-python
 
+import signal
 import socket
+import sys
 import threading
 import time
 from typing import Tuple
@@ -59,6 +61,14 @@ def handle_client(conn: socket.socket, addr: Tuple[str, str]) -> None:
         conn.close()
 
 
+def signal_handler(signal, frame):
+    print("\nprogram exiting gracefully")
+    sys.exit(0)
+
+
+# Use signal handling to break infinite loops
+signal.signal(signal.SIGINT, signal_handler)
+
 try:
     # --- create socket ---
 
@@ -107,8 +117,6 @@ try:
         # all_threads.append(t)
 
 except Exception as ex:
-    print(ex)
-except KeyboardInterrupt as ex:
     print(ex)
 finally:
     # --- close socket ---

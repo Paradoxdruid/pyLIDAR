@@ -84,34 +84,35 @@ def main(ser: serial.Serial) -> None:
 
 # Code that runs when file is directly executed, i.e.: `python serial_LD.py`
 if __name__ == "__main__":
+
+    # Use signal handling to break infinite loops
+    import signal
+    import sys
+
+    def signal_handler(signal, frame):
+        print("\nprogram exiting gracefully")
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, signal_handler)
+
+    print("Starting LIDAR data collection")
     try:
-        import sys
+        port: str = sys.argv[1]
+    except IndexError:
+        port = "COM4"  # Default port on Windows
 
-        print("Starting")
+    if port == "test":  # Use local server for testing
+        import socket
 
-        try:
-            port: str = sys.argv[1]
-        except IndexError:
-            port = "COM4"  # Default port on Windows
-
-        if port == "test":  # Use local server for testing
-            import socket
-
-            with serial.serial_for_url(
-                f"socket://{socket.gethostname()}:8000", timeout=1
-            ) as ser:
-                print("Entered")
-                main(ser)
-                print("Exited")
-        else:
-            # Open serial port connection to LD06 LIDAR
-            with serial.Serial(port, 230400, timeout=1) as ser:
-                print("Entered")
-                main(ser)
-                print("Exited")
-
-    # Allow breaking the infinite loop
-    except Exception as ex:
-        print(ex)
-    except KeyboardInterrupt as ex:
-        print(ex)
+        with serial.serial_for_url(
+            f"socket://{socket.gethostname()}:8000", timeout=1
+        ) as ser:
+            print("Entered")
+            main(ser)
+            print("Exited")
+    else:
+        # Open serial port connection to LD06 LIDAR
+        with serial.Serial(port, 230400, timeout=1) as ser:
+            print("Entered")
+            main(ser)
+            print("Exited")
