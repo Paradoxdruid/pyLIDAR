@@ -14,11 +14,11 @@ def convert_reading_to_polar(
 ) -> Tuple[List[float], List[int]]:
     """Convert a Reading object into a set of polar coordinates theta and r"""
 
-    num_points = len(reading.points)
-    start_angle = int(reading.start_angle)
-    end_angle = int(reading.end_angle)
-    step_size = int(((end_angle - start_angle) / num_points))
-    angles = list(
+    num_points: int = len(reading.points)
+    start_angle: int = reading.start_angle
+    end_angle: int = reading.end_angle
+    step_size: int = int(((end_angle - start_angle) / num_points))
+    angles: List[int] = list(
         range(
             start_angle,
             end_angle,
@@ -27,17 +27,21 @@ def convert_reading_to_polar(
     )
     angles = angles[:-1]
 
-    angles = [(each / 100) * 3.141529 / 180 for each in angles]  # convert to radians
+    out_angles: List[float] = [
+        (each / 100) * 3.141529 / 180 for each in angles
+    ]  # convert to radians
     # The division by 100 because angle is given as, i.e., 32457 for 324.57 degrees
 
-    distances = [each.distance for each in reading.points]
+    distances: List[int] = [each.distance for each in reading.points]
 
-    return (angles, distances)
+    return (out_angles, distances)
 
 
 def main(ser: serial.Serial) -> None:
 
     # Initialize empty figure
+    fig: plt.Figure
+    ax: plt.Axes
     fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
 
     # Initialize empty data lists
@@ -59,15 +63,17 @@ def main(ser: serial.Serial) -> None:
         # ---------  DO YOUR DATA PROCESSING HERE --------------------
 
         for each in data:
+            new_angles: List[float]
+            new_radii: List[int]
             new_angles, new_radii = convert_reading_to_polar(each)
             angles.extend(new_angles)
             radii.extend(new_radii)
 
         # ---------  DO YOUR GRAPHING AND GRAPH UPDATES HERE ---------
 
-        print("Plot")
-        print(f"{angles=}")
-        print(f"{radii=}")
+        # print("Plot")
+        # print(f"{angles=}")
+        # print(f"{radii=}")
         ax.plot(angles, radii)
         ax.grid(True)
         fig.canvas.draw()
@@ -84,7 +90,7 @@ if __name__ == "__main__":
         print("Starting")
 
         try:
-            port = sys.argv[1]
+            port: str = sys.argv[1]
         except IndexError:
             port = "COM4"  # Default port on Windows
 

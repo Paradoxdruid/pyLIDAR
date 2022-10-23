@@ -8,7 +8,7 @@ import threading
 import time
 from typing import Tuple
 
-SAMPLE = bytes.fromhex(
+SAMPLE: bytes = bytes.fromhex(
     (
         "54 2C 68 08 AB 7E E0 00 E4 DC 00 E2 D9 00 E5 D5 00 E3 D3 00 E4 D0 00 E9 CD 00"
         "E4 CA 00 E2 C7 00 E9 C5 00 E5 C2 00 E5 C0 00 E5 BE 82 3A 1A 50 54 2C 68 08 AB"
@@ -36,7 +36,7 @@ HOST: str = socket.gethostname()  # local address IP (not external address IP)
 PORT: int = 8000  # local port (not external port)
 
 
-def handle_client(conn, addr):
+def handle_client(conn: socket.socket, addr: Tuple[str, str]) -> None:
     print("Entered")
     # _ = conn.recv(1024)
     # print("Entered and received")
@@ -64,10 +64,8 @@ try:
 
     print("[DEBUG] create socket")
 
-    # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s: socket.socket = (
-        socket.socket()
-    )  # default value is (socket.AF_INET, socket.SOCK_STREAM)
+    s: socket.socket = socket.socket()
+    # default value is (socket.AF_INET, socket.SOCK_STREAM)
 
     # --- options ---
 
