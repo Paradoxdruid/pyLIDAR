@@ -8,7 +8,8 @@ import socket
 import sys
 import threading
 import time
-from typing import Tuple
+from types import FrameType
+from typing import Optional, Tuple
 
 SAMPLE: bytes = bytes.fromhex(
     (
@@ -61,7 +62,7 @@ def handle_client(conn: socket.socket, addr: Tuple[str, str]) -> None:
         conn.close()
 
 
-def signal_handler(signal, frame):
+def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
     print("\nprogram exiting gracefully")
     sys.exit(0)
 

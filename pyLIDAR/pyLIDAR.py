@@ -1,7 +1,8 @@
 """Script to read LD06 LIDAR datastream and plot an updating graph of data."""
 
 import time
-from typing import List, Tuple
+from types import FrameType
+from typing import List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import serial
@@ -89,7 +90,7 @@ if __name__ == "__main__":
     import signal
     import sys
 
-    def signal_handler(signal, frame):
+    def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
         print("\nprogram exiting gracefully")
         sys.exit(0)
 

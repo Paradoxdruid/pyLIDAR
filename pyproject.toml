@@ -19,3 +19,7 @@ dependencies = [
     "pyserial",
     "matplotlib",
 ]
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
