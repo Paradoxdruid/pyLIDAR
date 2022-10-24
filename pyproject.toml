@@ -30,6 +30,7 @@ build-backend = "flit_core.buildapi"
 [tool.mypy]
 ignore_missing_imports = true
 strict = true
+files = "pyLIDAR/*.py"
 
 [tool.black]
 line-length = 88
