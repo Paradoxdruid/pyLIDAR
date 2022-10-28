@@ -6,7 +6,6 @@ from dataclasses import asdict
 from types import FrameType
 from typing import List, Optional
 
-import matplotlib.pyplot as plt
 import read_data
 import serial
 
@@ -14,20 +13,22 @@ import serial
 def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:
 
     if plot is True:
+        import matplotlib.pyplot as plt
+
         # Initialize empty figure
         fig: plt.Figure
         ax: plt.Axes
         fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-
-    # Initialize empty data lists
-    angles: List[float] = []
-    radii: List[int] = []
 
     if save is True:
         from datetime import datetime
 
         timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         fname = f"{timestamp}.json"
+
+    # Initialize empty data lists
+    angles: List[float] = []
+    radii: List[int] = []
 
     while True:
 
