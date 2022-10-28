@@ -31,7 +31,8 @@ SAMPLE: bytes = bytes.fromhex(
     )
 )
 
-HOST: str = socket.gethostname()  # local address IP (not external address IP)
+# HOST: str = socket.gethostname()  # local address IP (not external address IP)
+HOST: str = "127.0.0.1"
 # '0.0.0.0' or '' - conection on all NICs (Network Interface Card),
 # '127.0.0.1' or 'localhost' - local conection only (can't connect from remote computer)
 # 'Local_IP' - connection only on one NIC which has this IP
