@@ -1,18 +1,17 @@
 """Script to read LD06 LIDAR datastream and plot an updating graph of data."""
 
-import os
 import json
+import os
 from dataclasses import asdict
 from types import FrameType
 from typing import List, Optional
 
 import matplotlib.pyplot as plt
+import read_data
 import serial
 
-import read_data
 
-
-def main(ser: serial.Serial, plot=False, save=False) -> None:
+def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:
 
     if plot is True:
         # Initialize empty figure
@@ -101,16 +100,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     port: str = args.port
-
-    if args.graph is True:
-        plot = True
-    else:
-        plot = False
-
-    if args.save is True:
-        save = True
-    else:
-        save = False
+    plot: bool = args.graph
+    save: bool = args.save
 
     print("Starting LIDAR data collection")
 
