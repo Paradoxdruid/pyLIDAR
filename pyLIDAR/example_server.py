@@ -1,8 +1,5 @@
 """A minimal test server to simulate LD06 data stream."""
 
-# Derived from
-# https://stackoverflow.com/questions/57925492/how-to-listen-continuously-to-a-socket-for-data-in-python
-
 import signal
 import socket
 import sys
@@ -10,6 +7,8 @@ import threading
 import time
 from types import FrameType
 from typing import Optional, Tuple
+
+from read_data import Point, Reading
 
 SAMPLE: bytes = bytes.fromhex(
     (
@@ -40,16 +39,62 @@ HOST: str = "127.0.0.1"
 PORT: int = 8000  # local port (not external port)
 
 
+def generate_Reading() -> Reading:
+    from random import randint
+
+    start_angle = randint(0, 30_000)
+    return Reading(
+        radar_speed=randint(1_000, 2_500),
+        start_angle=start_angle,
+        end_angle=start_angle + 5085,
+        timestamp=randint(1_000, 6_000),
+        points=[
+            Point(
+                distance=randint(50, 300),
+                angle=start_angle + randint(0, 5_000),
+                confidence=randint(100, 220),
+            )
+            for _ in range(0, 12)
+        ],
+    )
+
+
+def convert_chunk(two_ints: int) -> str:
+    hex_str = two_ints.to_bytes(2, byteorder="big").hex()
+    final_string = hex_str[2:] + hex_str[:2]
+    return final_string
+
+
+def convert_reading_to_hex(data: Reading) -> str:
+    radar_str = convert_chunk(data.radar_speed)
+    start_str = convert_chunk(data.start_angle)
+    end_str = convert_chunk(data.end_angle)
+    time_str = convert_chunk(data.timestamp)
+
+    point_list = [
+        convert_chunk(each.distance)
+        + each.confidence.to_bytes(1, byteorder="big").hex()
+        for each in data.points
+    ]
+
+    final_str = (
+        "54" + radar_str + start_str + "".join(point_list) + end_str + time_str + "1a50"
+    )
+
+    return final_str
+
+
 def handle_client(conn: socket.socket, addr: Tuple[str, str]) -> None:
     print("Entered")
-    # _ = conn.recv(1024)
-    # print("Entered and received")
     try:
-        # print("Trying")
         while True:
-            conn.send(SAMPLE)
-            # print("Sent")
+
+            new_readings = [generate_Reading() for _ in range(0, 4)]
+            new_hex = "".join([convert_reading_to_hex(each) for each in new_readings])
+            print(new_hex[0:12])
+            conn.send(bytes.fromhex(new_hex))
             time.sleep(1)
+
     except BrokenPipeError:
         print("[DEBUG] addr:", addr, "Connection closed by client?")
     except Exception as ex:
@@ -72,6 +117,9 @@ def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
 signal.signal(signal.SIGINT, signal_handler)
 
 try:
+    # Derived from
+    # https://stackoverflow.com/questions/57925492/how-to-listen-continuously-to-a-socket-for-data-in-python
+
     # --- create socket ---
 
     print("[DEBUG] create socket")
