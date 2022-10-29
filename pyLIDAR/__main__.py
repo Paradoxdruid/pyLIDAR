@@ -6,7 +6,7 @@ from typing import Optional
 
 import serial
 
-from pyLIDAR.pyLIDAR import main
+from pyLIDAR import pyLIDAR
 
 
 def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
@@ -14,32 +14,38 @@ def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
     sys.exit(0)
 
 
-signal.signal(signal.SIGINT, signal_handler)
+def main() -> None:
+    """Run pyLIDAR, parsing command line options."""
+    signal.signal(signal.SIGINT, signal_handler)
 
-# Set up argument parsing
-import argparse
+    # Set up argument parsing
+    import argparse
 
-parser = argparse.ArgumentParser(description="Collect LIDAR data")
-parser.add_argument("-p", "--port", required=True, help="serial port")
-parser.add_argument("-g", "--graph", action="store_true", help="graph data")
-parser.add_argument("-s", "--save", action="store_true", help="save data")
+    parser = argparse.ArgumentParser(description="Collect LIDAR data")
+    parser.add_argument("-p", "--port", required=True, help="serial port")
+    parser.add_argument("-g", "--graph", action="store_true", help="graph data")
+    parser.add_argument("-s", "--save", action="store_true", help="save data")
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-port: str = args.port
-plot: bool = args.graph
-save: bool = args.save
+    port: str = args.port
+    plot: bool = args.graph
+    save: bool = args.save
 
-print("Starting LIDAR data collection")
+    print("Starting LIDAR data collection")
 
-if port == "test":  # Use local server for testing
-    with serial.serial_for_url("socket://127.0.0.1:8000", timeout=1) as ser:
-        print("Entered")
-        main(ser, plot, save)
-        print("Exited")
-else:
-    # Open serial port connection to LD06 LIDAR
-    with serial.Serial(port, 230400, timeout=1) as ser:
-        print("Entered")
-        main(ser, plot, save)
-        print("Exited")
+    if port == "test":  # Use local server for testing
+        with serial.serial_for_url("socket://127.0.0.1:8000", timeout=1) as ser:
+            print("Entered")
+            pyLIDAR.main(ser, plot, save)
+            print("Exited")
+    else:
+        # Open serial port connection to LD06 LIDAR
+        with serial.Serial(port, 230400, timeout=1) as ser:
+            print("Entered")
+            pyLIDAR.main(ser, plot, save)
+            print("Exited")
+
+
+if __name__ == "__main__":
+    main()

@@ -14,7 +14,7 @@ dependencies = [
     "pyserial",
     "matplotlib",
 ]
-urls = [{homepage = "https://github.com/Paradoxdruid/pyLIDAR"}]
+urls = {homepage = "https://github.com/Paradoxdruid/pyLIDAR"}
 
 [project.optional-dependencies]
 dev = [
@@ -27,6 +27,9 @@ dev = [
 [build-system]
 requires = ["flit_core >=3.4,<4"]
 build-backend = "flit_core.buildapi"
+
+[project.scripts]
+pyLIDAR = "pyLIDAR.__main__:main"
 
 [tool.mypy]
 ignore_missing_imports = true
