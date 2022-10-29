@@ -6,8 +6,9 @@ from dataclasses import asdict
 from types import FrameType
 from typing import List, Optional
 
-import read_data
 import serial
+
+from pyLIDAR import read_data
 
 
 def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:

@@ -21,6 +21,7 @@ dev = [
     "black",
     "pytest",
     "mypy",
+    "pytest-mock",
 ]
 
 [build-system]

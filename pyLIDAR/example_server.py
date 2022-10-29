@@ -9,7 +9,7 @@ from random import randint
 from types import FrameType
 from typing import List, Optional, Tuple
 
-from read_data import Point, Reading
+from pyLIDAR.read_data import Point, Reading
 
 # HOST: str = socket.gethostname()  # local address IP (not external address IP)
 HOST: str = "127.0.0.1"
@@ -92,64 +92,67 @@ def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
     sys.exit(0)
 
 
-# Use signal handling to break infinite loops
-signal.signal(signal.SIGINT, signal_handler)
+if __name__ == "__main__":
+    # Use signal handling to break infinite loops
+    signal.signal(signal.SIGINT, signal_handler)
 
-try:
-    # Derived from
-    # https://stackoverflow.com/questions/57925492/how-to-listen-continuously-to-a-socket-for-data-in-python
+    try:
+        # Derived from
+        # https://stackoverflow.com/questions/57925492/how-to-listen-continuously-to-a-socket-for-data-in-python
 
-    # --- create socket ---
+        # --- create socket ---
 
-    print("[DEBUG] create socket")
+        print("[DEBUG] create socket")
 
-    s: socket.socket = socket.socket()
-    # default value is (socket.AF_INET, socket.SOCK_STREAM)
+        s: socket.socket = socket.socket()
+        # default value is (socket.AF_INET, socket.SOCK_STREAM)
 
-    # --- options ---
+        # --- options ---
 
-    # solution for "[Error 89] Address already in use". Use before bind()
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # solution for "[Error 89] Address already in use". Use before bind()
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    # --- assign socket to local IP (local NIC) ---
+        # --- assign socket to local IP (local NIC) ---
 
-    print("[DEBUG] bind:", (HOST, PORT))
+        print("[DEBUG] bind:", (HOST, PORT))
 
-    s.bind((HOST, PORT))  # one tuple (HOST, PORT), not two arguments
+        s.bind((HOST, PORT))  # one tuple (HOST, PORT), not two arguments
 
-    # --- set size of queue ---
+        # --- set size of queue ---
 
-    print("[DEBUG] listen")
+        print("[DEBUG] listen")
 
-    s.listen(1)  # number of clients waiting in queue for "accept".
-    # If queue is full then client can't connect.
+        s.listen(1)  # number of clients waiting in queue for "accept".
+        # If queue is full then client can't connect.
 
-    while True:
-        # --- accept client ---
+        while True:
+            # --- accept client ---
 
-        # accept client and create new socket `conn` (with different port)
-        # for this client only
-        # and server will can use `s` to accept other clients
-        # (if you will use threading)
+            # accept client and create new socket `conn` (with different port)
+            # for this client only
+            # and server will can use `s` to accept other clients
+            # (if you will use threading)
 
-        print("[DEBUG] accept ... waiting")
+            print("[DEBUG] accept ... waiting")
 
-        conn: socket.socket
-        addr: Tuple[str, str]
-        conn, addr = s.accept()  # socket, address
+            conn: socket.socket
+            addr: Tuple[str, str]
+            conn, addr = s.accept()  # socket, address
 
-        print("[DEBUG] addr:", addr)
+            print("[DEBUG] addr:", addr)
 
-        t: threading.Thread = threading.Thread(target=handle_client, args=(conn, addr))
-        t.start()
+            t: threading.Thread = threading.Thread(
+                target=handle_client, args=(conn, addr)
+            )
+            t.start()
 
-        # all_threads.append(t)
+            # all_threads.append(t)
 
-except Exception as ex:
-    print(ex)
-finally:
-    # --- close socket ---
+    except Exception as ex:
+        print(ex)
+    finally:
+        # --- close socket ---
 
-    print("[DEBUG] close socket")
+        print("[DEBUG] close socket")
 
-    s.close()
+        s.close()

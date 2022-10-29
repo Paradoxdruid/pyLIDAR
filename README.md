@@ -8,13 +8,13 @@ This repository has some scripts to interact with the serial data from the LD06,
 
 ## Test pyLIDAR
 
-In one shell, start the test server: `python pyLIDAR/example_server.py`
+In one shell, start the test server: `python -m pyLIDAR.example_server`
 
-In another, start pyLIDAR, specifying the "test" port: `python pyLIDAR/pyLIDAR.py -p test --save --graph`
+In another, start pyLIDAR, specifying the "test" port: `python -m pyLIDAR.pyLIDAR -p test --save --graph`
 
 ## Usage with LD06 LIDAR
 
-In a shell, start pyLIDAR with appropriate port: `python pyLIDAR/pyLIDAR.py -p COM4 --save`
+In a shell, start pyLIDAR with appropriate port: `python -m pyLIDAR.pyLIDAR -p COM4 --save`
 
 ### Sample Output
 
