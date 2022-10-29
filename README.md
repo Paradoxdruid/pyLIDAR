@@ -10,12 +10,24 @@ This repository has some scripts to interact with the serial data from the LD06,
 
 In one shell, start the test server: `python -m pyLIDAR.example_server`
 
-In another, start pyLIDAR, specifying the "test" port: `python -m pyLIDAR.pyLIDAR -p test --save --graph`
+In another, start pyLIDAR, specifying the "test" port: `python -m pyLIDAR -p test --save --graph`
 
 ## Usage with LD06 LIDAR
 
-In a shell, start pyLIDAR with appropriate port: `python -m pyLIDAR.pyLIDAR -p COM4 --save`
+In a shell, start pyLIDAR with appropriate port: `python -m pyLIDAR -p COM4 --save`
 
-### Sample Output
+### Command Line Options
+
+`-p PORT` or `--port PORT` specifies LD06 port (use `-p test` to connect to test server)
+
+`-s` or `--save` save collected data to a timestamped JSON file
+
+`-g` or `--graph` display live-updating graph of data
+
+### Data format
+
+Data is saved as a list of arrays in JSON format.
+
+## Sample Output
 
 ![Sample Output](/assets/sample_output.png?raw=true "Sample Output")
