@@ -5,44 +5,21 @@ import socket
 import sys
 import threading
 import time
+from random import randint
 from types import FrameType
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 from read_data import Point, Reading
 
-SAMPLE: bytes = bytes.fromhex(
-    (
-        "54 2C 68 08 AB 7E E0 00 E4 DC 00 E2 D9 00 E5 D5 00 E3 D3 00 E4 D0 00 E9 CD 00"
-        "E4 CA 00 E2 C7 00 E9 C5 00 E5 C2 00 E5 C0 00 E5 BE 82 3A 1A 50 54 2C 68 08 AB"
-        "7E E0 00 E4 DC 00 E2 D9 00 E5 D5 00 E3 D3 00 E4 D0 00 E9 CD 00 E4 CA 00 E2 C7"
-        "00 E9 C5 00 E5 C2 00 E5 C0 00 E5 BE 82 3A 1A 50 54 2C 68 08 AB 7E E0 00 E4 DC"
-        "00 E2 D9 00 E5 D5 00 E3 D3 00 E4 D0 00 E9 CD 00 E4 CA 00 E2 C7 00 E9 C5 00 E5"
-        "C2 00 E5 C0 00 E5 BE 82 3A 1A 50 54 2C 68 08 AB 7E E0 00 E4 DC 00 E2 D9 00 E5"
-        "D5 00 E3 D3 00 E4 D0 00 E9 CD 00 E4 CA 00 E2 C7 00 E9 C5 00 E5 C2 00 E5 C0 00"
-        "E5 BE 82 3A 1A 50 54 2C 68 08 AB 7E E0 00 E4 DC 00 E2 D9 00 E5 D5 00 E3 D3 00"
-        "E4 D0 00 E9 CD 00 E4 CA 00 E2 C7 00 E9 C5 00 E5 C2 00 E5 C0 00 E5 BE 82 3A 1A"
-        "50 54 2C 68 08 AB 7E E0 00 E4 DC 00 E2 D9 00 E5 D5 00 E3 D3 00 E4 D0 00 E9 CD"
-        "00 E4 CA 00 E2 C7 00 E9 C5 00 E5 C2 00 E5 C0 00 E5 BE 82 3A 1A 50 54 2C 68 08"
-        "AB 7E E0 00 E4 DC 00 E2 D9 00 E5 D5 00 E3 D3 00 E4 D0 00 E9 CD 00 E4 CA 00 E2"
-        "C7 00 E9 C5 00 E5 C2 00 E5 C0 00 E5 BE 82 3A 1A 50 54 2C 68 08 AB 7E E0 00 E4"
-        "DC 00 E2 D9 00 E5 D5 00 E3 D3 00 E4 D0 00 E9 CD 00 E4 CA 00 E2 C7 00 E9 C5 00"
-        "E5 C2 00 E5 C0 00 E5 BE 82 3A 1A 50"
-    )
-)
-
 # HOST: str = socket.gethostname()  # local address IP (not external address IP)
 HOST: str = "127.0.0.1"
-# '0.0.0.0' or '' - conection on all NICs (Network Interface Card),
-# '127.0.0.1' or 'localhost' - local conection only (can't connect from remote computer)
-# 'Local_IP' - connection only on one NIC which has this IP
-
 PORT: int = 8000  # local port (not external port)
 
 
 def generate_Reading() -> Reading:
-    from random import randint
+    """Generate dummy LIDAR Reading with reasonable data."""
 
-    start_angle = randint(0, 30_000)
+    start_angle: int = randint(0, 30_000)
     return Reading(
         radar_speed=randint(1_000, 2_500),
         start_angle=start_angle,
@@ -60,24 +37,26 @@ def generate_Reading() -> Reading:
 
 
 def convert_chunk(two_ints: int) -> str:
-    hex_str = two_ints.to_bytes(2, byteorder="big").hex()
-    final_string = hex_str[2:] + hex_str[:2]
+    """Convert two byte integers into swapped hex strings."""
+    hex_str: str = two_ints.to_bytes(2, byteorder="big").hex()
+    final_string: str = hex_str[2:] + hex_str[:2]
     return final_string
 
 
 def convert_reading_to_hex(data: Reading) -> str:
-    radar_str = convert_chunk(data.radar_speed)
-    start_str = convert_chunk(data.start_angle)
-    end_str = convert_chunk(data.end_angle)
-    time_str = convert_chunk(data.timestamp)
+    """Convert a Reading object back into a LD06 style hex string."""
+    radar_str: str = convert_chunk(data.radar_speed)
+    start_str: str = convert_chunk(data.start_angle)
+    end_str: str = convert_chunk(data.end_angle)
+    time_str: str = convert_chunk(data.timestamp)
 
-    point_list = [
+    point_list: List[str] = [
         convert_chunk(each.distance)
         + each.confidence.to_bytes(1, byteorder="big").hex()
         for each in data.points
     ]
 
-    final_str = (
+    final_str: str = (
         "54" + radar_str + start_str + "".join(point_list) + end_str + time_str + "1a50"
     )
 
@@ -85,13 +64,13 @@ def convert_reading_to_hex(data: Reading) -> str:
 
 
 def handle_client(conn: socket.socket, addr: Tuple[str, str]) -> None:
-    print("Entered")
+    """Accept connection and send dummy data."""
+    print("[DEBUG] Entered")
     try:
         while True:
 
             new_readings = [generate_Reading() for _ in range(0, 4)]
             new_hex = "".join([convert_reading_to_hex(each) for each in new_readings])
-            print(new_hex[0:12])
             conn.send(bytes.fromhex(new_hex))
             time.sleep(1)
 
