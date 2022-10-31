@@ -1,0 +1,44 @@
+{% set name = "pyLIDAR" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  git_url: "https://github.com/Paradoxdruid/pyLIDAR.git"
+  git_rev: "v0.1.0"
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
+  number: 0
+
+requirements:
+  host:
+    - python >=3.8
+    - pip
+    - flit
+    - flit-core
+  run:
+    - python >=3.8
+    - pyserial
+    - matplotlib
+
+test:
+  imports:
+    - pyLIDAR
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/Paradoxdruid/pyLIDAR
+  summary: Script to read LD06 LIDAR datastream and plot an updating graph of data.
+  license: MIT
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - Paradoxdruid
