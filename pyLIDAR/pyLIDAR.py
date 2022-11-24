@@ -3,7 +3,6 @@
 import json
 import os
 from dataclasses import asdict
-from typing import List
 
 import serial
 
@@ -27,8 +26,8 @@ def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:
         fname = f"{timestamp}.json"
 
     # Initialize empty data lists
-    angles: List[float] = []
-    radii: List[int] = []
+    angles: list[float] = []
+    radii: list[int] = []
 
     while True:
 
@@ -42,10 +41,10 @@ def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:
 
         # ---------  DO YOUR DATA PROCESSING HERE --------------------
 
-        new_angles: List[float] = [
+        new_angles: list[float] = [
             (point.angle / 100) * 3.141529 / 180 for point in data.points
         ]  # convert to radians
-        new_radii: List[int] = [point.distance for point in data.points]
+        new_radii: list[int] = [point.distance for point in data.points]
         angles.extend(new_angles)
         radii.extend(new_radii)
 

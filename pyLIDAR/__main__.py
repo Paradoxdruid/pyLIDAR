@@ -2,14 +2,13 @@
 import signal
 import sys
 from types import FrameType
-from typing import Optional
 
 import serial
 
 from pyLIDAR import pyLIDAR
 
 
-def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
+def signal_handler(signal: int, frame: FrameType | None) -> None:
     print("\nprogram exiting gracefully")
     sys.exit(0)
 

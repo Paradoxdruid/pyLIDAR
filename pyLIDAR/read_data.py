@@ -1,7 +1,6 @@
 """Interpret LD06 LIDAR data packets"""
 
 from dataclasses import dataclass
-from typing import List
 
 
 @dataclass
@@ -21,7 +20,7 @@ class Reading:
     start_angle: int
     end_angle: int
     timestamp: int
-    points: List[Point]
+    points: list[Point]
 
 
 def chunk(byte_input: bytes) -> int:

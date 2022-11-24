@@ -7,7 +7,6 @@ import threading
 import time
 from random import randint
 from types import FrameType
-from typing import List, Optional, Tuple
 
 from pyLIDAR.read_data import Point, Reading
 
@@ -50,7 +49,7 @@ def convert_reading_to_hex(data: Reading) -> str:
     end_str: str = convert_chunk(data.end_angle)
     time_str: str = convert_chunk(data.timestamp)
 
-    point_list: List[str] = [
+    point_list: list[str] = [
         convert_chunk(each.distance)
         + each.confidence.to_bytes(1, byteorder="big").hex()
         for each in data.points
@@ -63,7 +62,7 @@ def convert_reading_to_hex(data: Reading) -> str:
     return final_str
 
 
-def handle_client(conn: socket.socket, addr: Tuple[str, str]) -> None:
+def handle_client(conn: socket.socket, addr: tuple[str, str]) -> None:
     """Accept connection and send dummy data."""
     print("[DEBUG] Entered")
     try:
@@ -87,7 +86,7 @@ def handle_client(conn: socket.socket, addr: Tuple[str, str]) -> None:
         conn.close()
 
 
-def signal_handler(signal: int, frame: Optional[FrameType]) -> None:
+def signal_handler(signal: int, frame: FrameType | None) -> None:
     print("\nprogram exiting gracefully")
     sys.exit(0)
 
@@ -136,7 +135,7 @@ if __name__ == "__main__":
             print("[DEBUG] accept ... waiting")
 
             conn: socket.socket
-            addr: Tuple[str, str]
+            addr: tuple[str, str]
             conn, addr = s.accept()  # socket, address
 
             print("[DEBUG] addr:", addr)
