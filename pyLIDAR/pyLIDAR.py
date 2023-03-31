@@ -10,7 +10,6 @@ from pyLIDAR import read_data
 
 
 def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:
-
     if plot is True:
         import matplotlib.pyplot as plt
 
@@ -30,7 +29,6 @@ def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:
     radii: list[int] = []
 
     while True:
-
         raw_byte: bytes = ser.read(1)  # read one byte
         if not raw_byte[0:1] == b"T":  # If that byte isn't a start character,
             continue  # repeat while loop, don't execute the code below
@@ -58,7 +56,6 @@ def main(ser: serial.Serial, plot: bool = False, save: bool = False) -> None:
 
         # --------- DO YOUR DATA SAVING HERE    -----------------------
         if save is True:
-
             if os.path.isfile(fname):
                 # File exists, so append JSON object to output file JSON array
                 with open(fname, "a+") as outfile:

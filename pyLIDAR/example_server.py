@@ -67,7 +67,6 @@ def handle_client(conn: socket.socket, addr: tuple[str, str]) -> None:
     print("[DEBUG] Entered")
     try:
         while True:
-
             new_readings = [generate_Reading() for _ in range(0, 4)]
             new_hex = "".join([convert_reading_to_hex(each) for each in new_readings])
             conn.send(bytes.fromhex(new_hex))

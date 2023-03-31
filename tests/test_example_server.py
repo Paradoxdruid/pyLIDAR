@@ -40,7 +40,6 @@ EXPECTED_CHUNK = "6808"
 
 
 def test_generate_reading(mocker: MockerFixture) -> None:
-
     mocker.patch("pyLIDAR.example_server.randint", return_value=100)
 
     actual: Reading = example_server.generate_Reading()

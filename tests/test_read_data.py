@@ -39,24 +39,20 @@ EXPECTED_CHUNK: int = 84
 
 
 def test_read_data() -> None:
-
     actual: Reading = read_data.read_data(SAMPLE)
     assert actual == EXPECTED_READING
 
 
 def test_read_data_failed_bytes() -> None:
-
     with pytest.raises(ValueError, match="Incomplete data packet."):
         _ = read_data.read_data(b"TT")
 
 
 def test_read_data_failed_read() -> None:
-
     actual: Reading = read_data.read_data(SAMPLE[0:13] + b"TT" + SAMPLE[15:47])
     assert actual != EXPECTED_READING
 
 
 def test_chunk() -> None:
-
     actual: int = read_data.chunk(SAMPLE[0:1])
     assert actual == EXPECTED_CHUNK
